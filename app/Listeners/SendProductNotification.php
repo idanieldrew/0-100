@@ -24,10 +24,6 @@ class SendProductNotification
      */
     public function handle(ProductGenerated $event): void
     {
-        /*$$user = User::query()
-            ->where('email', event->admin_email)
-            ->first();*/
-
         $mail = new ProductCreated([
             $event->name,
             $event->price
