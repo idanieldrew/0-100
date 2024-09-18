@@ -1,0 +1,371 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sample gateway",
+    "description": "0-100",
+    "version": "1.1.1"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000/api/admin/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "cart",
+      "description": "Cart actions",
+      "externalDocs": {
+        "url": "cart"
+      }
+    },
+    {
+      "name": "product",
+      "description": "Product actions",
+      "externalDocs": {
+        "url": "product"
+      }
+    },
+    {
+      "name": "user",
+      "description": "user actions",
+      "externalDocs": {
+        "url": "user"
+      }
+    }
+  ],
+  "paths": {
+    "/cart": {
+      "post": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "Add a new product to cart",
+        "description": "Add a new product to cart or added to old cart",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/{userId}": {
+      "get": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "user shopping cart",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserCartRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/": {
+      "post": {
+        "tags": [
+          "product"
+        ],
+        "summary": "store product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "$ref": "#/components/schemas/LoginRes"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CartReq": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "product_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 123
+          }
+        }
+      },
+      "CartRes": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "format": "string",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "format": "string",
+            "example": "This product has been added to your shopping cart."
+          },
+          "data": {
+            "type": "object",
+            "format": "int64",
+            "example": [
+              {
+                "id": 1
+              },
+              {
+                "slug": "ref-527901014"
+              },
+              {
+                "price": "15.00"
+              },
+              {
+                "stock": 5
+              },
+              {
+                "created_at": "2024-09-18T11:15:00.000000Z"
+              },
+              {
+                "updated_at": "2024-09-18T11:15:00.000000Z"
+              }
+            ]
+          }
+        }
+      },
+      "UserCartRes": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "format": "string",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "format": "string",
+            "example": "This product has been added to your shopping cart."
+          },
+          "data": {
+            "type": "object",
+            "example": [
+              {
+                "user_id": 1
+              },
+              {
+                "total": 20
+              },
+              {
+                "items": [
+                  {
+                    "product_id": 1
+                  },
+                  {
+                    "price": 10
+                  },
+                  {
+                    "quantity": 2
+                  },
+                  {
+                    "totla": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ProductReq": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "format": "string",
+            "example": "product-1"
+          },
+          "price": {
+            "type": "integer",
+            "format": "int64",
+            "example": 456
+          }
+        }
+      },
+      "ProductRes": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "format": "string",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "format": "string",
+            "example": "Successfully create product"
+          }
+        }
+      },
+      "LoginReq": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "string",
+            "example": "admin@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "string",
+            "example": "password"
+          }
+        }
+      },
+      "LoginRes": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "format": "string",
+            "example": "success"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int64",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "format": "string",
+            "example": "Successfully login"
+          },
+          "data": {
+            "type": "object",
+            "example": [
+              {
+                "user": [
+                  {
+                    "id": 1
+                  },
+                  {
+                    "name": "admin"
+                  },
+                  {
+                    "email": "admin@admin.com"
+                  }
+                ]
+              },
+              {
+                "token": "test token"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
